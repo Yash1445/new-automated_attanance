@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - Face Recognition Attendance System</title>
+    <!--bootstrap cdn link-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="
+    sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Google Fonts and Material Icons -->
+    <link href="https://fonts.cdnfonts.com/css/brittany-signature" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!-- Custom CSS -->
+    <link href="../static/style.css" rel="stylesheet">
+    <style>
+        .admin-card {
+            background-color: rgb(211,211,211,0.5);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .admin-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .card-icon {
+            font-size: 48px;
+            color: #005CF1;
+        }
+        
+        .stats-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #6c3483;
+        }
+        
+        .action-button {
+            background-color: #6c3483;
+            color: white;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        
+        .action-button:hover {
+            background-color: #5b2a6e;
+        }
+        
+        .table-title {
+            background-color: #005CF1;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Navigation bar -->
+        <div class="row">
+            <div class="container">
+                <header class="d-flex flex-wrap align-items-center justify-content-center py-1 mb-3 border-bottom">
+                    <img src="../static/images/companylogo.jpg" width="70" height="70" class="d-inline-block align-top" alt="Company Logo">
+                    <span class="navbar-text fw-semibold fs-2 mx-auto">
+                        Admin Dashboard - Face Recognition Attendance System
+                    </span>
+                    <a href="/" class="gap-2 btn btn-outline-primary fs-5 my-3">Back to Home</a>
+                </header>
+                <div class="d-flex justify-content-start fs-5 align-items-center mx-3 pb-4">
+                    <span class="navbar-text mr-2" style="margin-right:5px">
+                        Date: 
+                    </span>
+                    <span id="currDate"></span>
+                    <span class="ms-auto">
+                        Welcome, <strong>Admin</strong> | <a href="/logout" class="text-decoration-none">Logout</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="admin-card text-center">
+                    <i class="material-icons card-icon">people</i>
+                    <h2 class="stats-number">{{ totalreg }}</h2>
+                    <h5>Total Registered Users</h5>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="admin-card text-center">
+                    <i class="material-icons card-icon">event_available</i>
+                    <h2 class="stats-number">{{ daily_attendance }}</h2>
+                    <h5>Today's Attendance</h5>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="admin-card text-center">
+                    <i class="material-icons card-icon">event_busy</i>
+                    <h2 class="stats-number">{{ absent_count }}</h2>
+                    <h5>Absent Today</h5>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="admin-card text-center">
+                    <i class="material-icons card-icon">warning</i>
+                    <h2 class="stats-number">{{ late_count }}</h2>
+                    <h5>Late Arrivals</h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Actions -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="admin-card">
+                    <h3 class="table-title text-center">System Management</h3>
+                    <div class="d-grid gap-3">
+                        <button class="btn action-button p-3 fs-5" id="exportBtn">
+                            <i class="material-icons align-middle me-2">file_download</i> Export Attendance Data
+                        </button>
+                        <button class="btn action-button p-3 fs-5" id="backupBtn">
+                            <i class="material-icons align-middle me-2">backup</i> Backup System Data
+                        </button>
+                        <button class="btn action-button p-3 fs-5" id="trainModelBtn">
+                            <i class="material-icons align-middle me-2">psychology</i> Re-train Recognition Model
+                        </button>
+                        <button class="btn action-button p-3 fs-5" id="settingsBtn">
+                            <i class="material-icons align-middle me-2">settings</i> System Settings
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="admin-card">
+                    <h3 class="table-title text-center">User Management</h3>
+                    <div class="d-grid gap-3">
+                        <button class="btn action-button p-3 fs-5" id="addUsersBtn">
+                            <i class="material-icons align-middle me-2">person_add</i> Bulk Add Users
+                        </button>
+                        <button class="btn action-button p-3 fs-5" id="editUsersBtn">
+                            <i class="material-icons align-middle me-2">edit</i> Edit User Data
+                        </button>
+                        <button class="btn action-button p-3 fs-5" id="removeUsersBtn">
+                            <i class="material-icons align-middle me-2">person_remove</i> Remove Users
+                        </button>
+                        <button class="btn action-button p-3 fs-5" id="manageAdminsBtn">
+                            <i class="material-icons align-middle me-2">admin_panel_settings</i> Manage Admin Accounts
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Data -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="admin-card">
+                    <h3 class="table-title text-center">Today's Attendance Log</h3>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered" style="background-color: white;">
+                            <thead>
+                                <tr class="table-primary">
+                                    <th scope="col">S.No</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Time</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if l %}
+                                    {% for i in range(l) %}
+                                    <tr>
+                                        <td>{{ i+1 }}</td>
+                                        <td>{{ names[i] }}</td>
+                                        <td>{{ rolls[i] }}</td>
+                                        <td>{{ times[i] }}</td>
+                                        <td>
+                                            {% if times[i] < '09:30:00' %}
+                                                <span class="badge bg-success">On Time</span>
+                                            {% else %}
+                                                <span class="badge bg-warning text-dark">Late</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">
+                                                <i class="material-icons small">edit</i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger">
+                                                <i class="material-icons small">delete</i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="6" class="text-center">No attendance records for today</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registered Users -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="admin-card">
+                    <h3 class="table-title text-center">Registered Users</h3>
+                    <div class="d-flex justify-content-end mb-3">
+                        <div class="input-group" style="max-width: 300px;">
+                            <input type="text" class="form-control" placeholder="Search users...">
+                            <button class="btn btn-outline-primary" type="button">
+                                <i class="material-icons small">search</i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered" style="background-color: white;">
+                            <thead>
+                                <tr class="table-primary">
+                                    <th scope="col">S.No</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Department</th>
+                                    <th scope="col">Registration Date</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in registered_users %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ user.name }}</td>
+                                        <td>{{ user.id }}</td>
+                                        <td>IT</td>
+                                        <td>01-05-2025</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">
+                                                <i class="material-icons small">edit</i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger">
+                                                <i class="material-icons small">delete</i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-info">
+                                                <i class="material-icons small">history</i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            Showing <span class="fw-bold">1-{{ registered_users|length }}</span> of <span class="fw-bold">{{ totalreg }}</span> users
+                        </div>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Logs -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="admin-card">
+                    <h3 class="table-title text-center">Recent System Logs</h3>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered" style="background-color: white;">
+                            <thead>
+                                <tr class="table-primary">
+                                    <th scope="col">Time</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">User</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>01-05-2025 15:08:48</td>
+                                    <td><span class="badge bg-success">Info</span></td>
+                                    <td>Model trained successfully with 35 face samples</td>
+                                    <td>Admin</td>
+                                </tr>
+                                <tr>
+                                    <td>01-05-2025 15:08:47</td>
+                                    <td><span class="badge bg-primary">Info</span></td>
+                                    <td>Training with 35 images for user yash_2301201198</td>
+                                    <td>Admin</td>
+                                </tr>
+                                <tr>
+                                    <td>01-05-2025 15:08:22</td>
+                                    <td><span class="badge bg-primary">Info</span></td>
+                                    <td>Created folder for new user: static/faces/yash_2301201198</td>
+                                    <td>Admin</td>
+                                </tr>
+                                <tr>
+                                    <td>01-05-2025 15:07:44</td>
+                                    <td><span class="badge bg-warning text-dark">Warning</span></td>
+                                    <td>Unknown face detected with distance: 11.347833633422852</td>
+                                    <td>System</td>
+                                </tr>
+                                <tr>
+                                    <td>01-05-2025 15:07:37</td>
+                                    <td><span class="badge bg-warning text-dark">Warning</span></td>
+                                    <td>Unknown face detected with distance: 16.994949340820312</td>
+                                    <td>System</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button class="btn action-button">View All Logs</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="container-fluid">
+            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+                <div class="col-md-4 d-flex align-items-center">
+                    <a href="/" class="mb-2 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+                        <svg class="bi" width="30" height="24">
+                            <use xlink:href="#bootstrap"></use>
+                        </svg>
+                    </a>
+                    <span class="mb-3 mb-md-0 text-muted">© 2025, Face Recognition Attendance System</span>
+                </div>
+                <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+                    <li class="ms-3"><a class="text-muted" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                height="16" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
+                                <path
+                                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+                            </svg></a></li>
+                </ul>
+            </footer>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Display current date and time
+        var now = new Date();
+        var datetime = now.toLocaleString();
+        document.getElementById('currDate').innerHTML = datetime;
+        
+        // Button event handlers
+        document.getElementById('exportBtn').addEventListener('click', function() {
+            alert('Exporting attendance data...');
+            // Add export functionality
+        });
+        
+        document.getElementById('backupBtn').addEventListener('click', function() {
+            alert('Backing up system data...');
+            // Add backup functionality
+        });
+        
+        document.getElementById('trainModelBtn').addEventListener('click', function() {
+            alert('Re-training recognition model. This may take a few minutes...');
+            // Add model training functionality
+        });
+        
+        document.getElementById('settingsBtn').addEventListener('click', function() {
+            alert('Opening system settings...');
+            // Add settings functionality
+        });
+        
+        document.getElementById('addUsersBtn').addEventListener('click', function() {
+            alert('Opening bulk user addition...');
+            // Add bulk user addition functionality
+        });
+        
+        document.getElementById('editUsersBtn').addEventListener('click', function() {
+            alert('Opening user edit interface...');
+            // Add user edit functionality
+        });
+        
+        document.getElementById('removeUsersBtn').addEventListener('click', function() {
+            alert('Opening user removal interface...');
+            // Add user removal functionality
+        });
+        
+        document.getElementById('manageAdminsBtn').addEventListener('click', function() {
+            alert('Opening admin account management...');
+            // Add admin management functionality
+        });
+    </script>
+
+    <!-- Bootstrap Scripts -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Face Recognition Attendance System</title>
+    <!-- Force reload of CSS -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <!--bootstrap cdn link-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="
+    sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!--google font link-->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!-- AOS Animation Library -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <!--include style.css here with timestamp to prevent caching-->
+    <link href="../static/style.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <style>
+        /* Inline dark theme CSS to force dark mode regardless of external CSS */
+        :root {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-tertiary: #2c3e50;
+            --bg-card: rgba(44, 62, 80, 0.5);
+            --accent-color: #3498db;
+            --accent-hover: #2980b9;
+            --text-primary: #e0e0e0;
+            --text-secondary: #95a5a6;
+            --purple-primary: #9b59b6;
+            --purple-hover: #8e44ad;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --error-color: #e74c3c;
+            --border-color: #34495e;
+            --shadow-light: rgba(255, 255, 255, 0.1);
+            --shadow-dark: rgba(0, 0, 0, 0.3);
+        }
+        
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .table {
+            color: var(--text-primary);
+        }
+        
+        .border-bottom, .border-top {
+            border-color: var(--border-color) !important;
+        }
+        
+        .text-muted {
+            color: var(--text-secondary) !important;
+        }
+        
+        .rounded {
+            background-color: rgba(44, 62, 80, 0.5) !important;
+            border-radius: 15px !important;
+            box-shadow: 0 8px 15px var(--shadow-dark);
+        }
+        
+        .text-bg-primary {
+            background-color: var(--bg-tertiary) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .table-primary {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        
+        input[type="text"] {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 10px;
+        }
+        
+        .btn-outline-primary {
+            color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--accent-color);
+            color: var(--text-primary);
+        }
+        
+        .highlight {
+            color: var(--accent-color);
+        }
+        
+        /* Ripple effect */
+        button {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ripple {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        /* Button styling */
+        .btn-take-attendance {
+            background: linear-gradient(45deg, var(--accent-color), var(--purple-primary));
+            border: none;
+            color: white;
+            border-radius: 25px;
+        }
+        
+        /* Logo glow effect */
+        .logo-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .logo-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: transparent;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.7);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 15px rgba(52, 152, 219, 0.7); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(52, 152, 219, 0.9); }
+            100% { transform: scale(1); box-shadow: 0 0 15px rgba(52, 152, 219, 0.7); }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <!--below row is for navbar-->
+        <div class="row">
+            <div class="container">
+                <header class="d-flex flex-wrap align-items-center justify-content-center py-1 mb-3 border-bottom" data-aos="fade-down" data-aos-duration="800">
+                    <div class="logo-container me-3">
+                        <img src="../static/images/companylogo.jpg" width="70" height="70" class="d-inline-block align-top rounded-circle" alt="Company Logo">
+                        <div class="logo-glow"></div>
+                    </div>
+                    <span class="navbar-text fw-semibold fs-2 mx-auto">
+                        <span class="highlight">Face Recognition</span> Attendance System
+                    </span>
+
+                    <button type="button" id="adminloginbtn" class="gap-2 btn btn-outline-primary fs-5 my-3 glow-on-hover">
+                        <i class="material-icons align-middle me-1">admin_panel_settings</i> Admin Login
+                    </button>
+                </header>
+                <div class="d-flex justify-content-start fs-5 align-items-center mx-3 pb-4" data-aos="fade-right" data-aos-duration="600">
+                    <span class="navbar-text mr-2" style="margin-right:5px">
+                        <i class="material-icons align-middle me-1">calendar_today</i> Date: 
+                    </span>
+                    <span id="currDate" class="highlight"></span>
+                </div>
+            </div>
+        </div>
+        
+        <!--below row is the body of the website-->
+        <div class="row">
+            <div class="col text-center rounded mx-4" style="padding: 0px;" data-aos="fade-right" data-aos-duration="800">
+                <h2 class="text-bg-primary fs-3 py-3 mb-3 px-4 rounded light mx-auto text-center">
+                    Today's Attendance <i class="material-icons align-middle ms-2">assignment</i>
+                </h2>
+                <a class="center d-flex justify-content-center" style="text-decoration: none;" href="/start">
+                    <button id='Abutton' type='submit' class='d-flex justify-content-center align-items-center gap-2 btn btn-take-attendance fs-5 my-3 pulse-animation'>
+                        Take Attendance <i class="material-icons">beenhere</i>
+                    </button>
+                </a>
+                <div class="mx-4 my-3">
+                    <table class="table table-hover table-bordered py-2 px-2">
+                        <thead>
+                            <tr class="table-primary">
+                                <th scope="col">S.No</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">ID</th>
+                                <th scope="col">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if l %}
+                                {% for i in range(l) %}
+                                <tr class="table-row-animate">
+                                    <td>{{ i+1 }}</td>
+                                    <td>{{ names[i] }}</td>
+                                    <td>{{ rolls[i] }}</td>
+                                    <td>{{ times[i] }}</td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center py-4">
+                                        <div style="padding: 20px;">
+                                            <i class="material-icons" style="font-size: 48px; color: var(--text-secondary); opacity: 0.5;">event_busy</i>
+                                            <p class="mt-2">No attendance records for today</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col">
+                <div class="row">
+                    <div class="col text-center rounded mx-4" style="padding: 0px;" data-aos="fade-left" data-aos-duration="800">
+                        <h2 class="text-bg-primary fs-3 py-3 mb-3 px-4 rounded light mx-auto text-center">
+                            Add New User <i class="material-icons align-middle ms-2">control_point_duplicate</i>
+                        </h2>
+                        <form class="my-4" action='/add' method="POST" enctype="multipart/form-data">
+                            <div class="row mb-3 d-flex align-items-center justify-content-start">
+                                <label for="newusername" class="fs-5 fw-bolder col-sm-6 col-form-label">Enter New User Name*</label>
+                                <div class="col-sm-5">
+                                    <input type="text" id="newusername" name='newusername' required>
+                                </div>
+                            </div>
+                            <div class="row mb-3 d-flex align-items-center justify-content-start">
+                                <label for="newuserid" class="fs-5 fw-bolder col-sm-6 col-form-label">Enter New User ID*</label>
+                                <div class="col-sm-5">
+                                    <input type="text" id="newuserid" name='newuserid' required>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-center align-items-center">
+                                <button id="add" type='submit' class='gap-2 btn btn-outline-primary fs-5 my-3'>
+                                    <i class="material-icons align-middle me-1">person_add</i> Add New User
+                                </button>
+                            </div>
+                            <br>
+
+                            <h5 data-aos="fade-up" data-aos-delay="300"><i>Total Users in Database: <span id="totalUserCounter">{{ totalreg }}</span></i></h5>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center py-4 pt-5" data-aos="fade-up" data-aos-duration="600">
+            <h1 class="fs-4">Total Registered Users Lists</h1>
+        </div>
+
+        <div class="mx-5 mb-5" data-aos="fade-up" data-aos-duration="800">
+            <table class="table table-hover table-bordered py-2 px-2">
+                <thead>
+                    <tr class="table-primary">
+                        <th scope="col">S.No</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if registered_users and registered_users|length > 0 %}
+                        {% for user in registered_users %}
+                        <tr class="table-row-animate">
+                            <td>{{ loop.index }}</td>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.id }}</td>
+                            <td></td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center py-4">
+                                <div style="padding: 20px;">
+                                    <i class="material-icons" style="font-size: 48px; color: var(--text-secondary); opacity: 0.5;">person_off</i>
+                                    <p class="mt-2">No users registered yet</p>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!--footer-->
+        <div class="container-fluid">
+            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+                <div class="col-md-4 d-flex align-items-center">
+                    <a href="/" class="mb-2 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+                        <svg class="bi" width="30" height="24">
+                            <use xlink:href="#bootstrap"></use>
+                        </svg>
+                    </a>
+                    <span class="mb-3 mb-md-0 text-muted">© 2025, Face Recognition Attendance System</span>
+                </div>
+
+                <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+                    <li class="ms-3"><a class="text-muted" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                height="16" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
+                                <path
+                                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+                            </svg></a></li>
+                </ul>
+            </footer>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        // Initialize AOS with error handling
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if AOS library is loaded
+            if (typeof AOS !== 'undefined') {
+                AOS.init({
+                    once: false,
+                    mirror: true,
+                    duration: 800
+                });
+            } else {
+                console.warn('AOS library not loaded. Animations may not work.');
+            }
+            
+            // Start other initialization
+            initializePage();
+        });
+        
+        function initializePage() {
+            // Set up date time display
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+            
+            // Set up counter animation
+            setupCounterAnimation();
+            
+            // Set up button events
+            setupButtons();
+            
+            // Set up ripple effects
+            setupRippleEffects();
+        }
+        
+        // Display current date and time
+        function updateDateTime() {
+            try {
+                var now = new Date();
+                var datetime = now.toLocaleString();
+                var dateElement = document.getElementById('currDate');
+                if (dateElement) {
+                    dateElement.innerHTML = datetime;
+                }
+            } catch (e) {
+                console.error('Error updating date/time:', e);
+            }
+        }
+        
+        // Counter animation for total users
+        function setupCounterAnimation() {
+            try {
+                // Get the actual value from the database
+                const totalUsers = parseInt(document.getElementById('totalUserCounter').textContent) || 0;
+                const counterElement = document.getElementById('totalUserCounter');
+                
+                if (counterElement) {
+                    // Store the original value
+                    const originalValue = counterElement.textContent;
+                    
+                    // Start animation after a small delay for visual effect
+                    setTimeout(function() {
+                        animateCounter('totalUserCounter', 0, totalUsers, 1500);
+                    }, 500);
+                }
+            } catch (e) {
+                console.error('Error setting up counter animation:', e);
+                // Fallback - just ensure the number is displayed
+                const counterElement = document.getElementById('totalUserCounter');
+                if (counterElement) {
+                    // Keep the original text content as is
+                }
+            }
+        }
+        
+        function animateCounter(id, start, end, duration) {
+            const element = document.getElementById(id);
+            if (!element) return;
+            
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const currentCount = Math.floor(progress * (end - start) + start);
+                element.textContent = currentCount;
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    element.textContent = end;
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+        
+        // Set up button events
+        function setupButtons() {
+            var adminButton = document.getElementById('adminloginbtn');
+            if (adminButton) {
+                adminButton.addEventListener('click', function() {
+                    window.location.href = '/adminlogin';
+                });
+            }
+        }
+        
+        // Set up ripple effects
+        function setupRippleEffects() {
+            const buttons = document.getElementsByTagName("button");
+            for (const button of buttons) {
+                button.addEventListener("click", createRipple);
+            }
+        }
+        
+        // Improved ripple effect
+        function createRipple(event) {
+            try {
+                const button = event.currentTarget;
+                
+                const circle = document.createElement("span");
+                circle.className = "ripple";
+                
+                const diameter = Math.max(button.clientWidth, button.clientHeight);
+                circle.style.width = circle.style.height = `${diameter}px`;
+                
+                // Get click position relative to button
+                const rect = button.getBoundingClientRect();
+                const left = event.clientX - rect.left - diameter / 2;
+                const top = event.clientY - rect.top - diameter / 2;
+                
+                circle.style.left = `${left}px`;
+                circle.style.top = `${top}px`;
+                
+                // Remove existing ripple
+                const oldRipple = button.querySelector(".ripple");
+                if (oldRipple) {
+                    oldRipple.remove();
+                }
+                
+                button.appendChild(circle);
+                
+                // Remove ripple after animation completes
+                circle.addEventListener('animationend', function() {
+                    if (circle.parentElement) {
+                        circle.parentElement.removeChild(circle);
+                    }
+                });
+            } catch (e) {
+                console.error('Error creating ripple effect:', e);
+            }
+        }
+    </script>
+
+    <!-- Bootstrap Scripts -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

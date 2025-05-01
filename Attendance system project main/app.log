@@ -1,0 +1,55 @@
+2025-04-30 15:06:41,251 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:1000
+2025-04-30 15:06:41,252 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-04-30 15:06:41,254 - werkzeug - INFO -  * Restarting with stat
+2025-04-30 15:06:56,550 - werkzeug - WARNING -  * Debugger is active!
+2025-04-30 15:06:56,555 - werkzeug - INFO -  * Debugger PIN: 484-410-150
+2025-04-30 15:06:56,598 - werkzeug - INFO - 127.0.0.1 - - [30/Apr/2025 15:06:56] "GET / HTTP/1.1" 200 -
+2025-04-30 15:06:56,622 - werkzeug - INFO - 127.0.0.1 - - [30/Apr/2025 15:06:56] "[33mGET /static/index-styles.css HTTP/1.1[0m" 404 -
+2025-04-30 15:06:56,721 - werkzeug - INFO - 127.0.0.1 - - [30/Apr/2025 15:06:56] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-04-30 15:06:56,723 - werkzeug - INFO - 127.0.0.1 - - [30/Apr/2025 15:06:56] "[36mGET /static/images/companylogo.jpg HTTP/1.1[0m" 304 -
+2025-04-30 15:07:18,135 - __main__ - INFO - Face recognition - nearest distance: 15.348115921020508
+2025-04-30 15:07:18,135 - __main__ - INFO - Unknown face detected with distance: 15.348115921020508
+2025-04-30 15:07:18,135 - __main__ - INFO - Predicted: Unknown, Distance: 15.348115921020508
+2025-04-30 15:07:22,002 - __main__ - INFO - Face recognition - nearest distance: 15.829427719116211
+2025-04-30 15:07:22,003 - __main__ - INFO - Unknown face detected with distance: 15.829427719116211
+2025-04-30 15:07:22,003 - __main__ - INFO - Predicted: Unknown, Distance: 15.829427719116211
+2025-04-30 15:07:29,352 - __main__ - INFO - Face recognition - nearest distance: 17.051090240478516
+2025-04-30 15:07:29,353 - __main__ - INFO - Unknown face detected with distance: 17.051090240478516
+2025-04-30 15:07:29,354 - __main__ - INFO - Predicted: Unknown, Distance: 17.051090240478516
+2025-04-30 15:07:30,623 - __main__ - INFO - Face recognition - nearest distance: 17.035165786743164
+2025-04-30 15:07:30,624 - __main__ - INFO - Unknown face detected with distance: 17.035165786743164
+2025-04-30 15:07:30,624 - __main__ - INFO - Predicted: Unknown, Distance: 17.035165786743164
+2025-04-30 15:07:37,128 - __main__ - INFO - Face recognition - nearest distance: 16.994949340820312
+2025-04-30 15:07:37,129 - __main__ - INFO - Unknown face detected with distance: 16.994949340820312
+2025-04-30 15:07:37,130 - __main__ - INFO - Predicted: Unknown, Distance: 16.994949340820312
+2025-04-30 15:07:44,160 - __main__ - INFO - Face recognition - nearest distance: 11.347833633422852
+2025-04-30 15:07:44,160 - __main__ - INFO - Unknown face detected with distance: 11.347833633422852
+2025-04-30 15:07:44,160 - __main__ - INFO - Predicted: Unknown, Distance: 11.347833633422852
+2025-04-30 15:07:56,034 - werkzeug - INFO - 127.0.0.1 - - [30/Apr/2025 15:07:56] "GET /start HTTP/1.1" 200 -
+2025-04-30 15:07:56,189 - werkzeug - INFO - 127.0.0.1 - - [30/Apr/2025 15:07:56] "[33mGET /static/index-styles.css HTTP/1.1[0m" 404 -
+2025-04-30 15:07:56,200 - werkzeug - INFO - 127.0.0.1 - - [30/Apr/2025 15:07:56] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-04-30 15:07:56,203 - werkzeug - INFO - 127.0.0.1 - - [30/Apr/2025 15:07:56] "[36mGET /static/images/companylogo.jpg HTTP/1.1[0m" 304 -
+2025-04-30 15:08:22,093 - __main__ - INFO - Created folder for new user: static/faces/yash_2301201198
+2025-04-30 15:08:47,714 - __main__ - INFO - Training Model
+2025-04-30 15:08:47,718 - __main__ - INFO - Training with 35 images for user yash_2301201198
+2025-04-30 15:08:48,485 - __main__ - INFO - Model trained successfully with 35 face samples
+2025-04-30 15:08:48,486 - werkzeug - INFO - 127.0.0.1 - - [30/Apr/2025 15:08:48] "[32mPOST /add HTTP/1.1[0m" 302 -
+2025-04-30 15:08:48,496 - werkzeug - INFO - 127.0.0.1 - - [30/Apr/2025 15:08:48] "GET / HTTP/1.1" 200 -
+2025-04-30 15:08:48,520 - werkzeug - INFO - 127.0.0.1 - - [30/Apr/2025 15:08:48] "[33mGET /static/index-styles.css HTTP/1.1[0m" 404 -
+2025-04-30 15:08:48,525 - werkzeug - INFO - 127.0.0.1 - - [30/Apr/2025 15:08:48] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-04-30 15:08:48,529 - werkzeug - INFO - 127.0.0.1 - - [30/Apr/2025 15:08:48] "[36mGET /static/images/companylogo.jpg HTTP/1.1[0m" 304 -
+2025-04-30 15:08:58,698 - __main__ - ERROR - Error in identify_face: X has 7500 features, but KNeighborsClassifier is expecting 2500 features as input.
+2025-04-30 15:08:58,699 - __main__ - INFO - Predicted: Error, Distance: 999.0
+2025-04-30 15:09:04,536 - __main__ - ERROR - Error in identify_face: X has 7500 features, but KNeighborsClassifier is expecting 2500 features as input.
+2025-04-30 15:09:04,536 - __main__ - INFO - Predicted: Error, Distance: 999.0
+2025-04-30 15:09:06,935 - __main__ - ERROR - Error in identify_face: X has 7500 features, but KNeighborsClassifier is expecting 2500 features as input.
+2025-04-30 15:09:06,935 - __main__ - INFO - Predicted: Error, Distance: 999.0
+2025-04-30 15:09:13,265 - __main__ - ERROR - Error in identify_face: X has 7500 features, but KNeighborsClassifier is expecting 2500 features as input.
+2025-04-30 15:09:13,265 - __main__ - INFO - Predicted: Error, Distance: 999.0
+2025-04-30 15:09:21,335 - werkzeug - INFO - 127.0.0.1 - - [30/Apr/2025 15:09:21] "GET /start HTTP/1.1" 200 -
+2025-04-30 15:09:21,406 - werkzeug - INFO - 127.0.0.1 - - [30/Apr/2025 15:09:21] "[33mGET /static/index-styles.css HTTP/1.1[0m" 404 -
+2025-04-30 15:09:21,412 - werkzeug - INFO - 127.0.0.1 - - [30/Apr/2025 15:09:21] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2025-04-30 15:09:21,416 - werkzeug - INFO - 127.0.0.1 - - [30/Apr/2025 15:09:21] "[36mGET /static/images/companylogo.jpg HTTP/1.1[0m" 304 -
+2025-04-30 15:19:27,534 - werkzeug - INFO -  * Detected change in 'C:\\Users\\yashj\\OneDrive\\Desktop\\1445\\app.py', reloading
+2025-04-30 15:19:29,227 - werkzeug - INFO -  * Restarting with stat
