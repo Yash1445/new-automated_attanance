@@ -1,4 +1,4 @@
-# Face Recognition Attendance System
+# Face Recognition Attendance System 
 
 A modern dark-themed attendance tracking system that uses facial recognition to identify and record user attendance.
 
